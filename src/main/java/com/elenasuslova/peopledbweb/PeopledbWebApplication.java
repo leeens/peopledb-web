@@ -7,7 +7,9 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class PeopledbWebApplication {
 
 	public static void main(String[] args) {
+
 		SpringApplication.run(PeopledbWebApplication.class, args);
+
 	}
 
 }
