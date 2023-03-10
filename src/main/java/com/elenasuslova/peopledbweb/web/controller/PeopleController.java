@@ -2,7 +2,9 @@ package com.elenasuslova.peopledbweb.web.controller;
 
 import com.elenasuslova.peopledbweb.biz.model.Person;
 import com.elenasuslova.peopledbweb.data.PersonRepository;
+import jakarta.validation.Valid;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -31,11 +33,15 @@ public class PeopleController {
     public Person getPerson(){
         return new Person();
     }
-
     @PostMapping
-    public String savePerson(Person person){
+    public String savePerson(@Valid Person person, Errors errors){
         System.out.println(person);
-        personRepository.save(person);
-        return "redirect:people";
+        if(!errors.hasErrors()) {
+            personRepository.save(person);
+            return "redirect:people";
+        }
+        else {
+            return "people";
+        }
     }
 }
