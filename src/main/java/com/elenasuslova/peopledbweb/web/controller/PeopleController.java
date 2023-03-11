@@ -52,4 +52,13 @@ public class PeopleController {
         }
         return "redirect:people";
     }
+
+    @PostMapping(params = "edit=true")
+    public String editPerson(@RequestParam Optional<List<Long>> selections, Model model) {
+        if (selections.isPresent()) {
+            Optional<Person> person = personRepository.findById(selections.get().get(0));
+            model.addAttribute("person", person);
+        }
+        return "people";
+    }
 }

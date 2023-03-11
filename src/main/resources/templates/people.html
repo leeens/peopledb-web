@@ -32,13 +32,15 @@
                 <th scope="row" th:text="${person.id}"></th>
                 <td th:text="${person.lastName}"></td>
                 <td th:text="${person.firstName}"></td>
-                <td th:text="${{person.dob}}"></td>
+                <td th:text="${#temporals.format(person.dob, 'MMMM dd, yyyy')}"></td>
                 <td th:text="${{person.salary}}"></td>
                 <td th:text="${person.email}" class="d-sm-none d-md-table-cell"></td>
             </tr>
             </tbody>
         </table>
+        <button type="submit" name="edit" value="true" class="btn btn-primary mb-4 me-2">Edit</button>
         <button type="submit" name="delete" value="true" class="btn btn-danger mb-4">Delete</button>
+
     </form>
 </div>
 
@@ -82,6 +84,7 @@
             Please choose a username.
         </div>
     </div>
+        <input type="hidden" th:field="*{id}"/>
     <button type="submit" class="btn btn-primary">Save Person</button>
 </form>
 </div>
