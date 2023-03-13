@@ -38,4 +38,6 @@ public class Person {
     @NotEmpty(message="Please provide a email")
     private String email;
 
+    private String photoFileName;
+
 }
