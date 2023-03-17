@@ -1,5 +1,6 @@
 package com.elenasuslova.peopledbweb.data;
 
+import com.elenasuslova.peopledbweb.exception.StorageException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
@@ -10,6 +11,7 @@ import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Set;
 
 @Repository
 public class FileStorageRepository {
@@ -20,9 +22,8 @@ public class FileStorageRepository {
         try {
             Path filePath = Path.of(storageFolder).resolve(originalFilename).normalize();
             Files.copy(inputStream, filePath);
-        }
-        catch(IOException e) {
-            e.printStackTrace();
+        } catch (IOException e) {
+            throw new StorageException(e);
         }
     }
 
@@ -31,7 +32,19 @@ public class FileStorageRepository {
             Path filePath = Path.of(storageFolder).resolve(filename).normalize();
             return new UrlResource(filePath.toUri());
         } catch (MalformedURLException e) {
-            throw new RuntimeException(e);
+            throw new StorageException(e);
+        }
+    }
+
+
+    public void deleteAllByName(Iterable<String> filenames) {
+        try {
+            for (String filename : filenames) {
+                Path filePath = Path.of(storageFolder).resolve(filename).normalize();
+                Files.deleteIfExists(filePath);
+            }
+        } catch (IOException e) {
+            throw new StorageException(e);
         }
     }
 }
