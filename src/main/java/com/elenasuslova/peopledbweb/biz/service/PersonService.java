@@ -8,12 +8,17 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
 
 @Service
 public class PersonService {
@@ -44,5 +49,21 @@ public class PersonService {
 
     public Page<Person> findAll(Pageable pageable) {
         return personRepository.findAll(pageable);
+    }
+
+    public void importCSV(InputStream csvFileStream) {
+        try {
+            ZipInputStream zipInputStream = new ZipInputStream(csvFileStream);
+            zipInputStream.getNextEntry();
+            InputStreamReader inputStreamReader = new InputStreamReader(zipInputStream);
+            BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
+            bufferedReader.lines()
+                    .skip(1)
+                    .limit(20)
+                    .map(Person::parse)
+                    .forEach(personRepository::save);
+        } catch (IOException e) {
+
+        }
     }
 }
